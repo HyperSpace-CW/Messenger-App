@@ -1,0 +1,10 @@
+server:
+  addr: 0.0.0.0:3009
+
+pg:
+  host: "postgres"
+  port: "5432"
+  user: "postgres"
+  password: "postgres"
+  dbname: "postgres"
+  sslmode: "disable"
