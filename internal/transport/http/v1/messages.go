@@ -12,7 +12,7 @@ func (h *Handler) initMessageRoutes(router fiber.Router) {
 	messages := router.Group("/messages")
 	{
 		messages.Get("/:id", h.getMessagesByID)
-		messages.Post("/", h.createMessage)
+		messages.Post("/", h.saveMessage)
 	}
 }
 
@@ -29,7 +29,7 @@ func (h *Handler) getMessagesByID(c *fiber.Ctx) error {
 
 	messages, err := h.messageService.GetHistory(context.Background(), services.GetHistoryParams{
 		SenderID:   0,
-		ReceiverID: int64(receiverIDInt),
+		ReceiverID: uint32(receiverIDInt),
 	})
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("h.messageService.GetHistory: %v", err))
@@ -43,12 +43,12 @@ func (h *Handler) getMessagesByID(c *fiber.Ctx) error {
 }
 
 type CreateMessageRequest struct {
-	SenderID   int64  `json:"sender_id"`
-	ReceiverID int64  `json:"receiver_id"`
+	SenderID   uint32 `json:"sender_id"`
+	ReceiverID uint32 `json:"receiver_id"`
 	Content    string `json:"content"`
 }
 
-func (h *Handler) createMessage(c *fiber.Ctx) error {
+func (h *Handler) saveMessage(c *fiber.Ctx) error {
 	var req CreateMessageRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "failed to parse request body")

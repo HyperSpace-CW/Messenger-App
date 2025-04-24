@@ -3,9 +3,9 @@ package models
 import "time"
 
 type Message struct {
-	ID         int64
-	SenderID   int64
-	ReceiverID int64
+	ID         string
+	SenderID   string
+	ReceiverID string
 	Content    string
 	SentAt     *time.Time
 	CreatedAt  time.Time

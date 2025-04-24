@@ -22,7 +22,9 @@ func Run() {
 
 	log.Info("Staring messanger-app...")
 
-	messageRepo := repo.NewMessageRepo(cfg)
+	db := repo.ConnectDB(cfg)
+
+	messageRepo := repo.NewMessageRepo(db)
 	messageService := services.NewMessageService(messageRepo)
 	httpServer := http.NewServer(http.ServerConfig{
 		Addr:           cfg.Server.Addr,
