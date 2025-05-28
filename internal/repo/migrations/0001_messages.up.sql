@@ -23,5 +23,5 @@ CREATE TRIGGER set_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
-CREATE INDEX IF NOT EXISTS idx_sender_id ON messages (sender_id);
-CREATE INDEX IF NOT EXISTS idx_receiver_id ON messages (receiver_id);
+-- CREATE INDEX IF NOT EXISTS idx_sender_id ON messages (sender_id);
+-- CREATE INDEX IF NOT EXISTS idx_receiver_id ON messages (receiver_id);

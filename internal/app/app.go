@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"messanger/config"
 	"messanger/internal/repo"
+	"messanger/internal/repo/pg"
 	"messanger/internal/services"
 	"messanger/internal/transport/http"
+	"messanger/internal/transport/ws"
 	"messanger/pkg/logger"
 	"os"
 	"os/signal"
@@ -22,7 +24,13 @@ func Run() {
 
 	log.Info("Staring messanger-app...")
 
+<<<<<<< Updated upstream
 	messageRepo := repo.NewMessageRepo(cfg)
+=======
+	db := repo.ConnectDB(cfg)
+
+	messageRepo := pg.NewMessageRepo(db)
+>>>>>>> Stashed changes
 	messageService := services.NewMessageService(messageRepo)
 	httpServer := http.NewServer(http.ServerConfig{
 		Addr:           cfg.Server.Addr,
@@ -30,12 +38,21 @@ func Run() {
 		Log:            log,
 	})
 
+	websocketServer := ws.NewWebSocketServer(messageService, log, cfg.TokenKey)
+
 	go func() {
 		if err := httpServer.Run(); err != nil {
 			log.Fatal(fmt.Sprintf("error occurred while running HTTP server: %v", err))
 		}
 	}()
 	log.Info(fmt.Sprintf("HTTP server successfully started on %s", cfg.Server.Addr))
+
+	go func() {
+		if err := websocketServer.Run(cfg.WSServer.Addr); err != nil {
+			log.Error(fmt.Sprintf("error occurred while running WebSocket server: %v", err))
+		}
+	}()
+	log.Info(fmt.Sprintf("WebSocket server successfully started on %s", cfg.WSServer.Addr))
 
 	log.Info("Application started")
 

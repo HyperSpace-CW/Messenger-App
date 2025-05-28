@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"golang.org/x/net/websocket"
 	"messanger/internal/models"
 	"messanger/internal/repo"
 )
@@ -13,7 +14,12 @@ type MessageService interface {
 }
 
 type messageService struct {
+<<<<<<< Updated upstream
 	repo repo.MessageRepo
+=======
+	pg pg.MessageRepo
+	ws *websocket.Conn
+>>>>>>> Stashed changes
 }
 
 func NewMessageService(repo repo.MessageRepo) MessageService {
