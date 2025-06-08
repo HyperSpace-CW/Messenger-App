@@ -14,12 +14,8 @@ type MessageService interface {
 }
 
 type messageService struct {
-<<<<<<< Updated upstream
 	repo repo.MessageRepo
-=======
-	pg pg.MessageRepo
-	ws *websocket.Conn
->>>>>>> Stashed changes
+	ws   *websocket.Conn
 }
 
 func NewMessageService(repo repo.MessageRepo) MessageService {

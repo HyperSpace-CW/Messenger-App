@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"messanger/config"
 	"messanger/internal/repo"
-	"messanger/internal/repo/pg"
 	"messanger/internal/services"
 	"messanger/internal/transport/http"
 	"messanger/internal/transport/ws"
@@ -24,13 +23,7 @@ func Run() {
 
 	log.Info("Staring messanger-app...")
 
-<<<<<<< Updated upstream
 	messageRepo := repo.NewMessageRepo(cfg)
-=======
-	db := repo.ConnectDB(cfg)
-
-	messageRepo := pg.NewMessageRepo(db)
->>>>>>> Stashed changes
 	messageService := services.NewMessageService(messageRepo)
 	httpServer := http.NewServer(http.ServerConfig{
 		Addr:           cfg.Server.Addr,

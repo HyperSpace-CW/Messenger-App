@@ -27,7 +27,7 @@ func NewMessageRepo(db *sqlx.DB) MessageRepo {
 }
 
 type message struct {
-	ID         string     `db:"id"`
+	ID         int64      `db:"id"`
 	SenderID   int64      `db:"sender_id"`
 	ReceiverID int64      `db:"receiver_id"`
 	Content    string     `db:"content"`

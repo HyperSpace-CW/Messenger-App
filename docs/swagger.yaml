@@ -1,0 +1,30 @@
+info:
+  contact: {}
+paths:
+  /ws:
+    get:
+      consumes:
+      - application/json
+      description: Устанавливает соединение по WebSocket и обрабатывает входящие/исходящие
+        сообщения
+      parameters:
+      - description: Bearer {token}
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "101":
+          description: Switching Protocols
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      summary: Подключение к WebSocket
+      tags:
+      - websocket
+swagger: "2.0"

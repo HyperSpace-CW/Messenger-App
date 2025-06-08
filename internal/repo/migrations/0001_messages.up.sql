@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP DEFAULT NULL,
-    error_message TEXT DEFAULT NULL,
+    error_message TEXT DEFAULT NULL
 );
 
 CREATE OR REPLACE FUNCTION update_updated_at_column()

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
+	httpSwagger "github.com/swaggo/http-swagger"
+	_ "messanger/docs"
 	"messanger/internal/services"
 	"messanger/internal/transport/utils"
 	"net/http"
@@ -39,6 +41,16 @@ type CreateMessageRequest struct {
 	Content    string `json:"content"`
 }
 
+// HandleConnection обрабатывает WebSocket-соединение клиента.
+// @Summary      Подключение к WebSocket
+// @Description  Устанавливает соединение по WebSocket и обрабатывает входящие/исходящие сообщения
+// @Tags         websocket
+// @Accept       json
+// @Produce      json
+// @Param        Authorization header string true "Bearer {token}"
+// @Success      101 {string} string "Switching Protocols"
+// @Failure      401 {string} string "Unauthorized"
+// @Router       /ws [get]
 func (s *WebSocketServer) HandleConnection(w http.ResponseWriter, r *http.Request) {
 	conn, err := s.upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -47,7 +59,6 @@ func (s *WebSocketServer) HandleConnection(w http.ResponseWriter, r *http.Reques
 	}
 	defer conn.Close()
 
-	// Извлечение заголовка Authorization
 	authHeader := r.Header.Get("Authorization")
 	if authHeader == "" {
 		s.log.Error("Authorization header is missing")
@@ -56,7 +67,6 @@ func (s *WebSocketServer) HandleConnection(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// Извлечение userID из токена
 	userID, err := utils.ExtractUserIDFromHeader(authHeader, s.tokenKey)
 	if err != nil {
 		s.log.Errorf("Failed to extract user ID from header: %v", err)
@@ -118,6 +128,8 @@ func (s *WebSocketServer) broadcastMessage(userID int64, req CreateMessageReques
 func (s *WebSocketServer) Run(addr string) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ws", s.HandleConnection)
+
+	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	server := &http.Server{
 		Addr:    addr,
