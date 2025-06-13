@@ -11,12 +11,12 @@ import (
 func (h *Handler) initMessageRoutes(router fiber.Router) {
 	messages := router.Group("/messages")
 	{
-		messages.Get("/:id", h.getMessagesByID)
-		messages.Post("/", h.createMessage)
+		messages.Get("/:id", h.GetMessagesByID)
+		messages.Post("/", h.CreateMessage)
 	}
 }
 
-func (h *Handler) getMessagesByID(c *fiber.Ctx) error {
+func (h *Handler) GetMessagesByID(c *fiber.Ctx) error {
 	receiverID := c.Params("id")
 	if receiverID == "" {
 		return fiber.NewError(fiber.StatusBadRequest, "receiverID is required")
@@ -48,7 +48,7 @@ type CreateMessageRequest struct {
 	Content    string `json:"content"`
 }
 
-func (h *Handler) createMessage(c *fiber.Ctx) error {
+func (h *Handler) CreateMessage(c *fiber.Ctx) error {
 	var req CreateMessageRequest
 	if err := c.BodyParser(&req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "failed to parse request body")
