@@ -1,6 +1,98 @@
+definitions:
+  v1.CreateMessageRequest:
+    properties:
+      content:
+        type: string
+      receiver_id:
+        type: integer
+      sender_id:
+        type: integer
+    type: object
+  v1.HTTPError:
+    properties:
+      message:
+        type: string
+    type: object
+  v1.MessageResponse:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      receiver_id:
+        type: integer
+      sender_id:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
+  /messages:
+    post:
+      consumes:
+      - application/json
+      description: Сохраняет новое сообщение между двумя пользователями
+      parameters:
+      - description: Данные сообщения
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/v1.CreateMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Ошибка при парсинге запроса
+          schema:
+            $ref: '#/definitions/v1.HTTPError'
+        "500":
+          description: Ошибка при сохранении сообщения
+          schema:
+            $ref: '#/definitions/v1.HTTPError'
+      summary: Создать сообщение
+      tags:
+      - messages
+  /messages/{id}:
+    get:
+      description: Возвращает историю сообщений между текущим пользователем (в будущем
+        — по токену) и указанным получателем
+      parameters:
+      - description: ID получателя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/v1.MessageResponse'
+            type: array
+        "400":
+          description: Неверный ID
+          schema:
+            $ref: '#/definitions/v1.HTTPError'
+        "404":
+          description: Сообщения не найдены
+          schema:
+            $ref: '#/definitions/v1.HTTPError'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/v1.HTTPError'
+      summary: Получить сообщения по ID получателя
+      tags:
+      - messages
   /ws:
     get:
       consumes:
